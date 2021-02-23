@@ -31,33 +31,35 @@ public class WorkerService {
 
     public void assignShiftToWorker(int workerId, int shiftId) throws ShiftNotFoundException, WorkerNotFoundException,
             TwoShiftsInRowException{
-        Shift currentShift = shiftRepository.findById(shiftId).orElseThrow(ShiftNotFoundException::new);
-        ShiftDto currentShiftDto = shiftsMapper.mapToDto(currentShift);
+        Shift shiftToBeAssignedToWorker = shiftRepository.findById(shiftId).orElseThrow(ShiftNotFoundException::new);
+        ShiftDto shiftToBeAssignedToWorkerDto = shiftsMapper.mapToDto(shiftToBeAssignedToWorker);
         Worker worker = workerRepository.findById(workerId).orElseThrow(WorkerNotFoundException::new);
+        List<Shift> workerShifts = worker.getShifts();
 
-        List<Shift> shiftList = worker.getShifts();
-        if (workerDoesNotHaveAnyShifts(shiftList)) {
-            saveShift(currentShiftDto, worker);
+        if (workerDoesNotHaveAnyShifts(workerShifts)) {
+            assignShift(shiftToBeAssignedToWorkerDto, worker);
         } else {
-            shiftList.sort(Comparator.comparing(Shift::getTo));
-            Shift previousShift = shiftList.get(shiftList.size()-1);
-            ShiftDto latestShiftDto = shiftsMapper.mapToDto(previousShift);
-
-            if (hoursBetweenCurrentAndPassedShift(previousShift, currentShift) < HOURS_THRESHOLD) {
+            Shift latestShift = getLatestShift(workerShifts);
+            if (hoursBetweenCurrentAndPassedShift(latestShift, shiftToBeAssignedToWorker) < HOURS_THRESHOLD) {
                 throw new TwoShiftsInRowException();
             } else {
-                shiftRepository.save(shiftsMapper.mapToShift(latestShiftDto));
+                assignShift(shiftToBeAssignedToWorkerDto, worker);
             }
         }
+    }
+
+    private Shift getLatestShift(List<Shift> workerShifts){
+        workerShifts.sort(Comparator.comparing(Shift::getTo));
+        return workerShifts.get(workerShifts.size()-1);
     }
 
     private long hoursBetweenCurrentAndPassedShift(Shift previousShift, Shift currentShift) {
         return ChronoUnit.HOURS.between(previousShift.getTo(), currentShift.getFrom());
     }
 
-    private void saveShift(ShiftDto currentShiftDto, Worker worker) {
-        currentShiftDto.setWorkerList(worker);
-        shiftRepository.save(shiftsMapper.mapToShift(currentShiftDto));
+    private void assignShift(ShiftDto shiftToBeAssignedToWorkerDto, Worker worker) {
+        shiftToBeAssignedToWorkerDto.setWorkerList(worker);
+        shiftRepository.save(shiftsMapper.mapToShift(shiftToBeAssignedToWorkerDto));
     }
 
     private boolean workerDoesNotHaveAnyShifts(List<Shift> shiftList) {

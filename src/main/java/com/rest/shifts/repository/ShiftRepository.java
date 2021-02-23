@@ -17,5 +17,6 @@ public interface ShiftRepository extends CrudRepository<Shift, Integer> {
     @Override
     Shift save(Shift shift);
     @Query
-    Shift getShift(@Param("STARTING_DATETIME")LocalDateTime from, @Param("END_DATETIME") LocalDateTime to);
+    Shift getShiftWithTheSameStartingAndEnd(@Param("STARTING_DATETIME")LocalDateTime from,
+                                            @Param("END_DATETIME") LocalDateTime to);
 }

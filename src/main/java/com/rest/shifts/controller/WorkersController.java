@@ -46,7 +46,7 @@ public class WorkersController {
     public WorkerDto updateWorker(@RequestBody WorkerDto workerDto){
         Worker worker = workerMapper.mapToWorker(workerDto);
         workerRepository.save(worker);
-        return workerMapper.mapToWorkerDto(worker);
+        return workerMapper.mapToDto(worker);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "deleteWorker/{workerId}")

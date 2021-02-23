@@ -53,10 +53,11 @@ public class WorkerServiceTestSuite {
         List<Shift> shiftList = new ArrayList<>();
         when(workerRepository.findById(anyInt())).thenReturn(workerOptional);
         when(worker.getShifts()).thenReturn(shiftList);
+        int expectedSize = 0;
         //when
-        List<Shift> shiftListExpected = workerService.getShiftsForWorker(1);
+        List<Shift> shiftListExpected = workerService.getShiftsForWorker(workerId);
         //then
-        Assertions.assertEquals(0, shiftListExpected.size());
+        Assertions.assertEquals(expectedSize, shiftListExpected.size());
     }
 
     @Test

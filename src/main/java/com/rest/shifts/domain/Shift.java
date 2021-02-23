@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @Table(name="SHIFTS")
 @NamedNativeQuery(
-        name = "Shift.getShift",
+        name = "Shift.getShiftWithTheSameStartingAndEnd",
         query = "SELECT * FROM SHIFTS WHERE STARTING_DATETIME=:STARTING_DATETIME" +
                 " AND  END_DATETIME=:END_DATETIME",
         resultClass = Shift.class

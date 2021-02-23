@@ -17,10 +17,11 @@ public class WorkerRepositoryTestSuite {
         Worker worker = new Worker("maciej", "ra");
         //when
         workerRepository.save(worker);
-        int id = worker.getId();
+        int workerId = worker.getId();
+        int expectedWorkerId = 0;
         //then
-        Assertions.assertNotEquals(0, id);
-        workerRepository.deleteById(id);
+        Assertions.assertNotEquals(expectedWorkerId, workerId);
+        workerRepository.deleteById(workerId);
 
     }
 }

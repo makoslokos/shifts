@@ -13,13 +13,13 @@ public class WorkerMapper {
         return new Worker(workerDto.getFirstName(), workerDto.getLastName());
     }
 
-    public WorkerDto mapToWorkerDto(Worker worker){
+    public WorkerDto mapToDto(Worker worker){
         return new WorkerDto(worker.getId(),worker.getFirstName(), worker.getLastName());
     }
 
     public List<WorkerDto> mapToTaskDtoList(final List<Worker> taskList) {
         return taskList.stream()
-                .map(this::mapToWorkerDto)
+                .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
 }
