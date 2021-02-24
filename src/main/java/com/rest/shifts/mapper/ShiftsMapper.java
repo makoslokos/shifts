@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 public class ShiftsMapper {
     public ShiftDto mapToDto(Shift shift){
         return new ShiftDto(
+                shift.getId(),
                 shift.getFrom(),
                 shift.getTo()
         );
@@ -15,6 +16,7 @@ public class ShiftsMapper {
 
     public Shift mapToShift(ShiftDto shiftDto){
         Shift shift = new Shift(
+                shiftDto.getId(),
                 shiftDto.getFrom(),
                 shiftDto.getTo()
         );

@@ -27,7 +27,7 @@ public class Shift {
     public Shift() {
     }
 
-    public Shift(LocalDateTime from, LocalDateTime to) {
+    public Shift(int id, LocalDateTime from, LocalDateTime to) {
         this.from = from;
         this.to = to;
     }

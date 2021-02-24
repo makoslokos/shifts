@@ -66,7 +66,7 @@ public class WorkerServiceTestSuite {
         int workerId = 1;
         int shiftId = 1;
         Optional<Shift> shiftOptional = Optional.empty();
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
+        when(shiftRepository.findById(shiftId)).thenReturn(shiftOptional);
         //then
 
         //when
@@ -77,17 +77,17 @@ public class WorkerServiceTestSuite {
     public void assignShiftToWorkerThrowsWorkerNotFoundExceptionExceptionTest(){
         //given
         int workerId = 1;
-        int shiftId = 1;
-        Shift shift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int currentShiftId = 1;
+        Shift shift = new Shift(currentShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         Optional<Shift> shiftOptional = Optional.of(shift);
         Optional<Worker> workerOptional = Optional.empty();
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
-        when(workerRepository.findById(1)).thenReturn(workerOptional);
+        when(shiftRepository.findById(currentShiftId)).thenReturn(shiftOptional);
+        when(workerRepository.findById(workerId)).thenReturn(workerOptional);
         //then
 
         //when
-        Assertions.assertThrows(WorkerNotFoundException.class, ()->workerService.assignShiftToWorker(workerId, shiftId));
+        Assertions.assertThrows(WorkerNotFoundException.class, ()->workerService.assignShiftToWorker(workerId, currentShiftId));
     }
 
     @Test
@@ -95,16 +95,16 @@ public class WorkerServiceTestSuite {
             TwoShiftsInRowException{
         //given
         int workerId = 1;
-        int shiftId = 1;
-        Shift currentShift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int currentShiftId = 2;
+        Shift currentShift = new Shift(currentShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         Worker worker = new Worker("worker1", "worker1");
         Optional<Shift> shiftOptional = Optional.of(currentShift);
         Optional<Worker> workerOptional = Optional.of(worker);
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
-        when(workerRepository.findById(1)).thenReturn(workerOptional);
+        when(shiftRepository.findById(currentShiftId)).thenReturn(shiftOptional);
+        when(workerRepository.findById(workerId)).thenReturn(workerOptional);
         //then
-        workerService.assignShiftToWorker(workerId, shiftId);
+        workerService.assignShiftToWorker(workerId, currentShiftId);
         //when
         verify(shiftRepository, times(1)).save(any());
     }
@@ -113,42 +113,44 @@ public class WorkerServiceTestSuite {
     public void assignShiftToWorkerTwoShiftsInARowTest(){
         //given
         int workerId = 1;
-        int shiftId = 1;
-        Shift currentShift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int currentShiftId = 2;
+        int previousShiftId = 1;
+        Shift currentShift = new Shift(currentShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
-        Shift previousShift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        Shift previousShift = new Shift(previousShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         Worker worker = new Worker("worker1", "worker1");
         worker.getShifts().add(previousShift);
         Optional<Shift> shiftOptional = Optional.of(currentShift);
         Optional<Worker> workerOptional = Optional.of(worker);
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
-        when(workerRepository.findById(1)).thenReturn(workerOptional);
+        when(shiftRepository.findById(currentShiftId)).thenReturn(shiftOptional);
+        when(workerRepository.findById(workerId)).thenReturn(workerOptional);
         //then
 
         //when
-        Assertions.assertThrows(TwoShiftsInRowException.class, ()->workerService.assignShiftToWorker(workerId, shiftId));
+        Assertions.assertThrows(TwoShiftsInRowException.class, ()->workerService.assignShiftToWorker(workerId, currentShiftId));
     }
 
     @Test
     public void assignShiftToWorkerInLessThanEightHoursTest(){
         //given
         int workerId = 1;
-        int shiftId = 1;
-        Shift currentShift = new Shift(LocalDateTime.of(2021,02,21,2,0),
+        int currentShiftId = 2;
+        int previousShiftId = 1;
+        Shift currentShift = new Shift(currentShiftId, LocalDateTime.of(2021,02,21,2,0),
                 LocalDateTime.of(2021,02,21,10,0));
-        Shift previousShift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        Shift previousShift = new Shift(previousShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,1));
         Worker worker = new Worker("worker1", "worker1");
         worker.getShifts().add(previousShift);
         Optional<Shift> shiftOptional = Optional.of(currentShift);
         Optional<Worker> workerOptional = Optional.of(worker);
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
-        when(workerRepository.findById(1)).thenReturn(workerOptional);
+        when(shiftRepository.findById(currentShiftId)).thenReturn(shiftOptional);
+        when(workerRepository.findById(workerId)).thenReturn(workerOptional);
         //then
 
         //when
-        Assertions.assertThrows(TwoShiftsInRowException.class, ()->workerService.assignShiftToWorker(workerId, shiftId));
+        Assertions.assertThrows(TwoShiftsInRowException.class, ()->workerService.assignShiftToWorker(workerId, currentShiftId));
     }
 
     @Test
@@ -156,19 +158,20 @@ public class WorkerServiceTestSuite {
             TwoShiftsInRowException{
         //given
         int workerId = 1;
-        int shiftId = 1;
-        Shift currentShift = new Shift(LocalDateTime.of(2021,02,21,2,1),
+        int currentShiftId = 2;
+        int previousShiftId = 1;
+        Shift currentShift = new Shift(currentShiftId, LocalDateTime.of(2021,02,21,2,1),
                 LocalDateTime.of(2021,02,21,10,0));
-        Shift previousShift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        Shift previousShift = new Shift(previousShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,1));
         Worker worker = new Worker("worker1", "worker1");
         worker.getShifts().add(previousShift);
         Optional<Shift> shiftOptional = Optional.of(currentShift);
         Optional<Worker> workerOptional = Optional.of(worker);
-        when(shiftRepository.findById(1)).thenReturn(shiftOptional);
-        when(workerRepository.findById(1)).thenReturn(workerOptional);
+        when(shiftRepository.findById(currentShiftId)).thenReturn(shiftOptional);
+        when(workerRepository.findById(workerId)).thenReturn(workerOptional);
         //then
-        workerService.assignShiftToWorker(workerId, shiftId);
+        workerService.assignShiftToWorker(workerId, currentShiftId);
         //when
         verify(shiftRepository, times(1)).save(any());
     }

@@ -16,7 +16,8 @@ public class ShiftValidatorTestSuite {
     @Test
     public void validateShiftsDataPositiveTest(){
         //given
-        ShiftDto shiftDto = new ShiftDto(LocalDateTime.of(2021,02,21,10,0),
+        int shiftId = 1;
+        ShiftDto shiftDto = new ShiftDto(shiftId, LocalDateTime.of(2021,02,21,10,0),
                 LocalDateTime.of(2021,02,22,2,0));
         //when
 
@@ -27,7 +28,8 @@ public class ShiftValidatorTestSuite {
     @Test
     public void validateShiftsDataNegativeToDateBeforeFromTest(){
         //given
-        ShiftDto shiftDto = new ShiftDto(LocalDateTime.of(2021,02,21,2,0),
+        int shiftId = 1;
+        ShiftDto shiftDto = new ShiftDto(shiftId, LocalDateTime.of(2021,02,21,2,0),
                 LocalDateTime.of(2021,02,20,10,0));
         //when
 
@@ -38,7 +40,8 @@ public class ShiftValidatorTestSuite {
     @Test
     public void validateShiftsDataNegativeOneDateIsNullTest(){
         //given
-        ShiftDto shiftDto = new ShiftDto(LocalDateTime.of(2021,02,21,2,0), null);
+        int shiftId = 1;
+        ShiftDto shiftDto = new ShiftDto(shiftId, LocalDateTime.of(2021,02,21,2,0), null);
         //when
 
         //then

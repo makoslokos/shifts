@@ -57,17 +57,17 @@ public class ShiftsController {
 
     @RequestMapping(method = RequestMethod.GET, value="worker/{workerId}")
     public ResponseEntity<List<Shift>> getShiftsForWorker(@PathVariable("workerId") int workerId){
-        List<Shift> shiftList = null;
+        List<Shift> shifts = null;
         try{
-            shiftList = workerService.getShiftsForWorker(workerId);
+            shifts = workerService.getShiftsForWorker(workerId);
         }catch (WorkerNotFoundException e){
             return new ResponseEntity(new ApiError("Worker not found"), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(shiftList);
+        return ResponseEntity.ok(shifts);
     }
 
     @RequestMapping(method = RequestMethod.GET, value="/getAllShifts")
-    public List<Shift> getListOfAllShifts(){
+    public List<Shift> getAllShifts(){
         return shiftRepository.findAll();
     }
 

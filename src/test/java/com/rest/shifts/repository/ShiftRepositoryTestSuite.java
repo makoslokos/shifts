@@ -21,7 +21,8 @@ public class ShiftRepositoryTestSuite {
     @Test
     public void savingShift(){
         //given
-        Shift shift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int currentShiftId = 1;
+        Shift shift = new Shift(currentShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         //when
         shiftRepository.save(shift);
@@ -34,7 +35,8 @@ public class ShiftRepositoryTestSuite {
     @Test
     public void gettingShift(){
         //given
-        Shift shift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int currentShiftId = 1;
+        Shift shift = new Shift(currentShiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         //when
         shiftRepository.save(shift);
@@ -49,7 +51,8 @@ public class ShiftRepositoryTestSuite {
         //given
         LocalDateTime from = LocalDateTime.of(2021,02,20,10,0);
         LocalDateTime to = LocalDateTime.of(2021,02,20,18,0);
-        Shift shift = new Shift(from, to);
+        int currentShiftId = 1;
+        Shift shift = new Shift(currentShiftId, from, to);
         //when
         shiftRepository.save(shift);
         int shiftId = shift.getId();

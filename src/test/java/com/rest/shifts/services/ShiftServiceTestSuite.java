@@ -25,9 +25,10 @@ public class ShiftServiceTestSuite {
     @Test
     public void addExistingShiftTest(){
         //given
-        Shift shift = new Shift(LocalDateTime.of(2021,02,20,10,0),
+        int shiftId = 1;
+        Shift shift = new Shift(shiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
-        ShiftDto shiftDto = new ShiftDto(LocalDateTime.of(2021,02,20,10,0),
+        ShiftDto shiftDto = new ShiftDto(shiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         when(shiftRepository.getShiftWithTheSameStartingAndEnd(any(), any())).thenReturn(shift);
         when(shiftRepository.save(any())).thenReturn(shift);
@@ -41,7 +42,8 @@ public class ShiftServiceTestSuite {
     public void addNonExistingShiftTest(){
         //given
         Shift shift = null;
-        ShiftDto shiftDto = new ShiftDto(LocalDateTime.of(2021,02,20,10,0),
+        int shiftId = 1;
+        ShiftDto shiftDto = new ShiftDto(shiftId, LocalDateTime.of(2021,02,20,10,0),
                 LocalDateTime.of(2021,02,20,18,0));
         when(shiftRepository.getShiftWithTheSameStartingAndEnd(any(), any())).thenReturn(shift);
         when(shiftRepository.save(any())).thenReturn(shift);

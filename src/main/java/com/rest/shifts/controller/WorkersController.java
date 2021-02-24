@@ -38,8 +38,8 @@ public class WorkersController {
 
     @RequestMapping(method = RequestMethod.GET, value = "getWorkers")
     public List<WorkerDto> getWorkers(){
-        List<Worker> workerList = workerRepository.findAll();
-        return workerMapper.mapToTaskDtoList(workerList);
+        List<Worker> workers = workerRepository.findAll();
+        return workerMapper.mapToTaskDtoList(workers);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "updateWorker")
